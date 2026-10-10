@@ -1,16 +1,57 @@
-import { useState } from 'react'
-import { ArrowRightIcon, SearchIcon } from './Icons.jsx'
+import { useEffect, useRef, useState } from 'react'
+import { fetchRepository, parseRepoInput } from '../api/github.js'
+import RepoResult from './RepoResult.jsx'
+import { AlertIcon, ArrowRightIcon, SearchIcon } from './Icons.jsx'
 
 function Hero() {
-  // Remember what the user types. We will use this value
-  // later, when the GitHub API is connected.
+  // What the user types in the search box.
   const [repoUrl, setRepoUrl] = useState('')
+  // 'idle' (nothing yet), 'loading', 'success' or 'error'.
+  const [status, setStatus] = useState('idle')
+  const [repo, setRepo] = useState(null)
+  const [errorMessage, setErrorMessage] = useState('')
 
-  function handleSubmit(event) {
+  // Remembers the request in progress, so a new search can cancel it.
+  const requestRef = useRef(null)
+
+  // Cancel any request still running if the page goes away.
+  useEffect(() => () => requestRef.current?.abort(), [])
+
+  async function handleSubmit(event) {
     // Stop the browser from reloading the page.
-    // The analysis itself is not built yet.
     event.preventDefault()
+
+    const parsed = parseRepoInput(repoUrl)
+    if (!parsed) {
+      setStatus('error')
+      setErrorMessage(
+        'Please enter a repository as owner/repo (like facebook/react) or a GitHub link.',
+      )
+      return
+    }
+
+    requestRef.current?.abort()
+    const controller = new AbortController()
+    requestRef.current = controller
+
+    setStatus('loading')
+    setErrorMessage('')
+
+    try {
+      const data = await fetchRepository(parsed.owner, parsed.repo, controller.signal)
+      setRepo(data)
+      setStatus('success')
+    } catch (error) {
+      // A newer search replaced this one, so ignore it.
+      if (error.name === 'AbortError') {
+        return
+      }
+      setErrorMessage(error.message || 'Something went wrong. Please try again.')
+      setStatus('error')
+    }
   }
+
+  const isLoading = status === 'loading'
 
   return (
     <section className="hero" id="analyze">
@@ -46,15 +87,43 @@ function Hero() {
               spellCheck="false"
             />
           </div>
-          <button type="submit" className="analyze-button">
-            Analyze
-            <ArrowRightIcon size={18} />
+          <button type="submit" className="analyze-button" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <span className="spinner" aria-hidden="true" />
+                Analyzing
+              </>
+            ) : (
+              <>
+                Analyze
+                <ArrowRightIcon size={18} />
+              </>
+            )}
           </button>
         </form>
 
         <p className="hero-hint">
           Try <code>facebook/react</code> or <code>vitejs/vite</code>
         </p>
+
+        {/* aria-live tells screen readers to announce changes here. */}
+        <div className="result-area" aria-live="polite">
+          {isLoading && (
+            <div className="repo-card repo-loading">
+              <span className="spinner spinner-large" aria-hidden="true" />
+              Fetching repository from GitHub…
+            </div>
+          )}
+
+          {status === 'error' && (
+            <div className="error-message" role="alert">
+              <AlertIcon size={20} />
+              <p>{errorMessage}</p>
+            </div>
+          )}
+
+          {status === 'success' && repo && <RepoResult repo={repo} />}
+        </div>
       </div>
     </section>
   )
