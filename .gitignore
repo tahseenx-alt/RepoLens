@@ -23,3 +23,16 @@ dist-ssr
 *.sln
 *.sw?
 coverage
+
+# Environment files: never commit real values (keep the example)
+.env
+.env.*
+!.env.example
+
+# Windows system files
+Thumbs.db
+desktop.ini
+
+# Private keys and certificates
+*.pem
+*.key
