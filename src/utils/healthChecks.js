@@ -8,7 +8,7 @@
 //   'pending'     - the data is still loading
 // There is deliberately no overall score: the checks are simple signals,
 // not a measure of code quality or security.
-import { formatDate, formatNumber, formatRelative } from './format.js'
+import { formatDate, formatNumber, formatRelative, isCount } from './format.js'
 import { commitDate } from './commitActivity.js'
 
 const DAY = 24 * 60 * 60 * 1000
@@ -154,7 +154,9 @@ function issuesCheck(repo) {
   return {
     ...check,
     status: 'passed',
-    summary: `Issues are enabled. ${formatNumber(repo.open_issues_count)} open (GitHub's count includes open pull requests).`,
+    summary: isCount(repo.open_issues_count)
+      ? `Issues are enabled. ${formatNumber(repo.open_issues_count)} open issues and pull requests (GitHub counts both together).`
+      : "Issues are enabled. GitHub didn't report how many are open.",
   }
 }
 

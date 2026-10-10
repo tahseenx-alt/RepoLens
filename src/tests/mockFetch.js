@@ -1,7 +1,8 @@
 // A fake `fetch` for tests, so they never call the real GitHub API.
 // `routes` is a list of [pattern, response] pairs. The pattern is matched
 // against the path after https://api.github.com. A response is
-// { status, body, headers } or a function that returns one.
+// { status, body, headers }, an Error (a network failure), or a function
+// that returns one of those or a Promise of one (to simulate a slow reply).
 import { vi } from 'vitest'
 
 export function jsonResponse(body, { status = 200, headers = {} } = {}) {
@@ -26,7 +27,7 @@ export function mockFetch(routes) {
     if (!match) {
       return jsonResponse({ message: 'Not Found' }, { status: 404 })
     }
-    const response = typeof match[1] === 'function' ? match[1](path) : match[1]
+    const response = await (typeof match[1] === 'function' ? match[1](path) : match[1])
     if (response instanceof Error) {
       throw response
     }

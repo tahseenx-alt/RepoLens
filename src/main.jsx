@@ -6,11 +6,14 @@ import './styles/layout.css'
 import './styles/home.css'
 import './styles/dashboard.css'
 import App from './App.jsx'
+import ThemeProvider from './components/layout/ThemeProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
   </StrictMode>,
 )

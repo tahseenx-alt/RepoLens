@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { clearRepoCache, fetchRepository } from '../api/github.js'
+import { clearRepoCache, fetchRepository, getRepositoryFetchedAt } from '../api/github.js'
 import { useGitHubData } from '../hooks/useGitHubData.js'
 import { useRepoHistory } from '../hooks/useRepoHistory.js'
 import { isValidOwner, isValidRepoName } from '../utils/parseRepo.js'
 import RepoDashboard from '../components/dashboard/RepoDashboard.jsx'
-import { ErrorState, LoadingState } from '../components/ui/States.jsx'
+import { DashboardSkeleton, ErrorState } from '../components/ui/States.jsx'
 import NotFoundPage from './NotFoundPage.jsx'
 
 // The page at /:owner/:repo. It checks the address before asking GitHub
@@ -60,16 +60,10 @@ function RepositoryView({ owner, repo, onRefresh }) {
 
   return (
     <main id="main" className="dashboard container">
-      {repoState.status === 'loading' && (
-        <div className="panel">
-          <div className="panel-body">
-            <LoadingState label={`Loading ${owner}/${repo} from GitHub…`} lines={4} />
-          </div>
-        </div>
-      )}
+      {repoState.status === 'loading' && <DashboardSkeleton label={`Loading ${owner}/${repo} from GitHub…`} />}
 
       {repoState.status === 'error' && (
-        <div className="panel dashboard-error">
+        <div className="panel dashboard-error fade-in">
           <ErrorState
             title={`Couldn't load ${owner}/${repo}`}
             error={repoState.error}
@@ -82,7 +76,13 @@ function RepositoryView({ owner, repo, onRefresh }) {
         </div>
       )}
 
-      {repoState.status === 'success' && <RepoDashboard repo={data} onRefresh={onRefresh} />}
+      {repoState.status === 'success' && (
+        <RepoDashboard
+          repo={data}
+          fetchedAt={getRepositoryFetchedAt(owner, repo)}
+          onRefresh={onRefresh}
+        />
+      )}
     </main>
   )
 }

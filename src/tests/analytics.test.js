@@ -80,7 +80,7 @@ describe('languages', () => {
 
   it('groups small languages for the bar', () => {
     const many = Object.fromEntries(Array.from({ length: 12 }, (_, i) => [`Lang${i}`, 100 - i]))
-    const grouped = groupSmallLanguages(toLanguageList(many))
+    const grouped = groupSmallLanguages(toLanguageList(many), 8)
     expect(grouped).toHaveLength(9)
     expect(grouped.at(-1).name).toBe('Other (4)')
   })

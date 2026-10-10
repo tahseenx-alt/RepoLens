@@ -1,6 +1,9 @@
-/* Global styles: colors, fonts and basic elements.
-   Every color is a variable here, so the theme is easy to change. */
-:root {
+/* Global styles: theme colors, fonts, basic elements and animations.
+   Every color is a variable, defined once per theme. <html data-theme="...">
+   picks the set (see src/theme/theme.js and the script in index.html). */
+
+:root,
+:root[data-theme='dark'] {
   --bg: #0b0f17;
   --surface: #10161f;
   --surface-2: #151c27;
@@ -14,20 +17,71 @@
   /* The single accent color. */
   --accent: #5b8def;
   --accent-strong: #3d6fd9;
-  --accent-soft: rgba(91, 141, 239, 0.12);
+  --accent-hover: #4a7be3;
+  --accent-soft: rgba(91, 141, 239, 0.14);
+  --on-accent: #ffffff;
+  --topic-text: #a9c1f5;
 
   /* Status colors, always paired with an icon or text. */
   --success: #4cc38a;
   --warning: #e0a53a;
   --danger: #ef6b5b;
+  --danger-text: #f59486;
+  --danger-soft: rgba(239, 107, 91, 0.07);
+  --danger-border: rgba(239, 107, 91, 0.35);
   --merged: #a891f5;
 
+  --skeleton: #182030;
+  --skeleton-shine: #202a3b;
+  --shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.45);
+
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --surface-2: #f0f3f7;
+  --surface-hover: #e9edf3;
+  --border: #e1e6ed;
+  --border-strong: #cbd3de;
+  --text: #141a24;
+  --text-muted: #475266;
+  --text-dim: #5e697b;
+
+  --accent: #2f62d6;
+  --accent-strong: #2f62d6;
+  --accent-hover: #244fb3;
+  --accent-soft: rgba(47, 98, 214, 0.1);
+  --on-accent: #ffffff;
+  --topic-text: #24489c;
+
+  --success: #18794a;
+  --warning: #935700;
+  --danger: #c0362a;
+  --danger-text: #b3301f;
+  --danger-soft: rgba(192, 54, 42, 0.05);
+  --danger-border: rgba(192, 54, 42, 0.3);
+  --merged: #6e46c9;
+
+  --skeleton: #eceff4;
+  --skeleton-shine: #f6f8fb;
+  --shadow-popover: 0 8px 24px rgba(15, 23, 42, 0.12);
+
+  color-scheme: light;
+}
+
+:root {
   --radius: 8px;
   --radius-small: 6px;
   --font: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
 
-  color-scheme: dark;
+  /* Motion: short and calm. Reduced-motion users get none (see the end). */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --fast: 120ms;
+  --normal: 200ms;
+
   font-family: var(--font);
   font-size: 15px;
   line-height: 1.5;
@@ -47,6 +101,7 @@ body {
   margin: 0;
   min-width: 320px;
   background: var(--bg);
+  color: var(--text);
 }
 
 h1,
@@ -128,11 +183,61 @@ button {
   padding: 8px 12px;
   border-radius: var(--radius-small);
   background: var(--accent-strong);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .skip-link:focus {
   top: 12px;
+}
+
+/* ---------- Animations ---------- */
+
+/* Content appearing: a quick fade with a tiny upward move. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fade-in {
+  animation: fade-in var(--normal) var(--ease) both;
+}
+
+/* Bars that fill from left to right when data arrives. */
+@keyframes grow-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.grow-in {
+  animation: grow-in 500ms var(--ease) both;
+}
+
+/* A small sideways nudge for error messages. */
+@keyframes shake {
+  0%,
+  100% {
+    transform: none;
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+.shake {
+  animation: shake 240ms ease-in-out;
 }
 
 @keyframes spin {
@@ -145,9 +250,28 @@ button {
   animation: spin 0.9s linear infinite;
 }
 
+/* Smooth color change while switching themes. The class is added for a
+   moment only (see ThemeProvider), so it doesn't slow anything else. */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition:
+    background-color var(--normal) ease,
+    border-color var(--normal) ease,
+    color var(--normal) ease,
+    fill var(--normal) ease,
+    stroke var(--normal) ease !important;
+}
+
+/* People who ask their system for less motion get (almost) none. */
 @media (prefers-reduced-motion: reduce) {
-  .spin,
-  .skeleton-line {
-    animation: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

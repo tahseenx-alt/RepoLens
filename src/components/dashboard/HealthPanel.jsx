@@ -1,18 +1,10 @@
-import { CircleCheck, CircleHelp, LoaderCircle, TriangleAlert } from 'lucide-react'
-import { countByStatus, runHealthChecks } from '../../utils/healthChecks.js'
+import { countByStatus } from '../../utils/healthChecks.js'
+import { HEALTH_STATUS } from './healthStatus.js'
 import Panel from '../ui/Panel.jsx'
 
-// Icon and text for each status. The text is always shown,
-// so the status never depends on color alone.
-const STATUS = {
-  passed: { Icon: CircleCheck, label: 'Passed' },
-  warning: { Icon: TriangleAlert, label: 'Warning' },
-  unavailable: { Icon: CircleHelp, label: 'Unavailable' },
-  pending: { Icon: LoaderCircle, label: 'Checking' },
-}
-
-function HealthPanel({ repo, readme, commits, community }) {
-  const checks = runHealthChecks({ repo, readme, commits, community })
+// The full list of health checks. `checks` comes from runHealthChecks(),
+// which RepoDashboard runs once so the overview and this tab agree.
+function HealthPanel({ checks }) {
   const counts = countByStatus(checks)
 
   return (
@@ -39,7 +31,7 @@ function HealthPanel({ repo, readme, commits, community }) {
 
       <ul className="health-list">
         {checks.map((check) => {
-          const { Icon, label } = STATUS[check.status]
+          const { Icon, label } = HEALTH_STATUS[check.status]
           return (
             <li key={check.id} className={`health-item state-${check.status}`}>
               <Icon

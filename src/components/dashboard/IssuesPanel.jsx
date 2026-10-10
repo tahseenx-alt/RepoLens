@@ -9,7 +9,7 @@ import {
   GitPullRequestDraft,
 } from 'lucide-react'
 import { ISSUES_LIMIT } from '../../api/github.js'
-import { formatDate, formatNumber, safeExternalUrl } from '../../utils/format.js'
+import { formatDate, formatNumber, isCount, safeExternalUrl } from '../../utils/format.js'
 import { STATE_LABELS, isPullRequest, itemState, summarizeItems } from '../../utils/issues.js'
 import Panel from '../ui/Panel.jsx'
 import { AsyncContent, EmptyState } from '../ui/States.jsx'
@@ -87,7 +87,13 @@ function IssueList({ items, repo }) {
           })}
         </div>
         <p className="issue-total">
-          <strong>{formatNumber(repo.open_issues_count)}</strong> open issues and PRs in total
+          {isCount(repo.open_issues_count) ? (
+            <>
+              <strong>{formatNumber(repo.open_issues_count)}</strong> open issues &amp; PRs in total
+            </>
+          ) : (
+            'Open issues & PRs total: unavailable'
+          )}
         </p>
       </div>
 
@@ -106,10 +112,9 @@ function IssueList({ items, repo }) {
       )}
 
       <p className="note">
-        Showing the {Math.min(items.length, ISSUES_LIMIT)} most recently updated issues and pull
-        requests (open and closed). GitHub&apos;s open issue count of{' '}
-        {formatNumber(repo.open_issues_count)} includes open pull requests, so RepoLens labels the
-        two separately here.
+        Showing the {items.length} most recently updated issues and pull requests (open and
+        closed), up to {ISSUES_LIMIT}. GitHub&apos;s open count above includes open pull requests,
+        so the list labels each item as an issue or a pull request.
       </p>
     </>
   )
