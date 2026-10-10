@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { clearRepoCache, fetchRepository, getRepositoryFetchedAt } from '../api/github.js'
+import { clearRepoCache, fetchRepository } from '../api/github.js'
 import { useGitHubData } from '../hooks/useGitHubData.js'
 import { useRepoHistory } from '../hooks/useRepoHistory.js'
 import { isValidOwner, isValidRepoName } from '../utils/parseRepo.js'
@@ -28,8 +28,9 @@ function DashboardPage() {
   return <RefreshableRepository key={`${owner}/${repo}`.toLowerCase()} owner={owner} repo={repo} />
 }
 
-// Holds the Refresh button's state. Refreshing clears the cached answers
-// and gives RepositoryView a new key, which makes it load everything again.
+// Holds the Refresh button's state. Refreshing marks the saved answers as
+// out of date and gives RepositoryView a new key, which makes it ask GitHub
+// for everything again. (The old answers are only kept as a fallback.)
 function RefreshableRepository({ owner, repo }) {
   const [refreshCount, setRefreshCount] = useState(0)
 
@@ -77,11 +78,7 @@ function RepositoryView({ owner, repo, onRefresh }) {
       )}
 
       {repoState.status === 'success' && (
-        <RepoDashboard
-          repo={data}
-          fetchedAt={getRepositoryFetchedAt(owner, repo)}
-          onRefresh={onRefresh}
-        />
+        <RepoDashboard repo={data} onRefresh={onRefresh} />
       )}
     </main>
   )

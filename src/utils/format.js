@@ -52,6 +52,12 @@ export function formatShortDate(value) {
 }
 
 // "3 days ago", "2 months ago". `now` can be passed in for tests.
+// A time of day like "9:45 PM", in the reader's own format.
+export function formatClock(value) {
+  const date = toDate(value)
+  return date ? date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : 'Unknown time'
+}
+
 export function formatRelative(value, now = Date.now()) {
   const date = toDate(value)
   if (!date) {

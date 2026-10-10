@@ -12,8 +12,16 @@ import {
   RefreshCw,
   Scale,
   Star,
+  TriangleAlert,
 } from 'lucide-react'
-import { formatCompact, formatDate, formatNumber, isCount, safeExternalUrl } from '../../utils/format.js'
+import {
+  formatClock,
+  formatCompact,
+  formatDate,
+  formatNumber,
+  isCount,
+  safeExternalUrl,
+} from '../../utils/format.js'
 
 // The four headline numbers and the exact API field each one comes from.
 // Watchers are people subscribed to notifications (`subscribers_count`).
@@ -67,9 +75,60 @@ function Metric({ repo, label, field, Icon, hint }) {
   )
 }
 
+// "9:41 AM" for today, "Oct 9, 9:41 AM" for an earlier day.
+function formatWhen(date) {
+  const today = new Date().toDateString() === date.toDateString()
+  return today ? formatClock(date) : `${formatDate(date)}, ${formatClock(date)}`
+}
+
+const STALE_REASONS = {
+  'rate-limit': "GitHub's request limit has been reached",
+  network: "GitHub couldn't be reached",
+  unavailable: 'GitHub returned an error',
+}
+
+// When the data was fetched. It shows the oldest section, so nothing on
+// the page is older than it says. Saved answers are reused for a while
+// to save requests, so this can be earlier than the moment the page opened.
+function DataTime({ dataAge }) {
+  if (!dataAge) {
+    return null
+  }
+  const details = dataAge.sections.map(({ label, savedAt }) => `${label}: ${formatWhen(savedAt)}`).join('\n')
+  return (
+    <span
+      className="fetched-at"
+      title={`When each part was fetched from GitHub:\n${details}\n\nRefresh loads everything again.`}
+    >
+      Data from <time dateTime={dataAge.oldest.toISOString()}>{formatWhen(dataAge.oldest)}</time>
+    </span>
+  )
+}
+
+// Shown when some sections are older saved copies, because GitHub couldn't
+// answer. Old data is never passed off as current.
+function StaleNotice({ stale }) {
+  if (!stale) {
+    return null
+  }
+  const reason = STALE_REASONS[stale.reason] || "GitHub couldn't provide new data"
+  return (
+    <p className="stale-notice fade-in" role="status">
+      <TriangleAlert size={14} aria-hidden="true" />
+      <span>
+        {reason}, so {stale.labels.join(', ')} {stale.labels.length === 1 ? 'shows' : 'show'} saved data
+        from {formatWhen(stale.since)}.
+        {stale.retryAt
+          ? ` The limit resets at ${formatClock(stale.retryAt)}; press Refresh after that.`
+          : ' Press Refresh to try again.'}
+      </span>
+    </p>
+  )
+}
+
 // The top of the dashboard: name, description, links, key numbers
 // and repository details. Missing values are shown as missing, never guessed.
-function RepoHeader({ repo, fetchedAt, onRefresh }) {
+function RepoHeader({ repo, dataAge, onRefresh }) {
   const homepage = safeExternalUrl(repo.homepage)
   const repoUrl = safeExternalUrl(repo.html_url) || `https://github.com/${repo.full_name}`
 
@@ -116,14 +175,7 @@ function RepoHeader({ repo, fetchedAt, onRefresh }) {
         </div>
 
         <div className="repo-actions">
-          {fetchedAt && (
-            <span className="fetched-at">
-              Updated{' '}
-              <time dateTime={fetchedAt.toISOString()}>
-                {fetchedAt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
-              </time>
-            </span>
-          )}
+          <DataTime dataAge={dataAge} />
           <button type="button" className="button" onClick={onRefresh}>
             <RefreshCw size={14} aria-hidden="true" />
             Refresh
@@ -151,6 +203,8 @@ function RepoHeader({ repo, fetchedAt, onRefresh }) {
           </>
         )}
       </p>
+
+      <StaleNotice stale={dataAge?.stale} />
 
       <div className="summary-strip">
         <dl className="metric-group">

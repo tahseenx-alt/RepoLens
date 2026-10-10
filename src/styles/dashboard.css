@@ -152,6 +152,28 @@
 .fetched-at {
   color: var(--text-dim);
   font-size: 12.5px;
+  cursor: help;
+}
+
+/* Some sections show an older saved copy because GitHub couldn't answer. */
+.stale-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--warning);
+  border-radius: var(--radius-small);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.stale-notice svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--warning);
 }
 
 .repo-description {

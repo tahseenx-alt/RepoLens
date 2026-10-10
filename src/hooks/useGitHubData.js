@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const LOADING = { status: 'loading', data: null, error: null }
+const IDLE = { status: 'idle', data: null, error: null }
 
 // Runs `load` when the component appears (and again when `load` changes)
 // and tracks its progress. Returns:
-//   { status: 'loading' | 'success' | 'error', data, error, retry }
+//   { status: 'idle' | 'loading' | 'success' | 'error', data, error, retry }
 // `load` receives an AbortSignal so the request is cancelled if the
 // component disappears (for example, when another repository is opened).
 // Wrap `load` in useCallback, otherwise it would run on every render.
+// Pass `null` to wait without loading anything yet ('idle').
 export function useGitHubData(load) {
   // Bumping this number runs the effect again (used by "Try again").
   const [attempt, setAttempt] = useState(0)
@@ -15,6 +17,9 @@ export function useGitHubData(load) {
   const [result, setResult] = useState(null)
 
   useEffect(() => {
+    if (!load) {
+      return undefined
+    }
     const controller = new AbortController()
 
     load(controller.signal).then(
@@ -39,7 +44,7 @@ export function useGitHubData(load) {
   // A result for an older `load` or attempt is out of date, so the
   // new request is still loading.
   const isCurrent = result && result.load === load && result.attempt === attempt
-  const { status, data, error } = isCurrent ? result : LOADING
+  const { status, data, error } = !load ? IDLE : isCurrent ? result : LOADING
   // The same object is returned until something changes, so components
   // that receive it don't re-render (or recalculate) for no reason.
   return useMemo(() => ({ status, data, error, retry }), [status, data, error, retry])
