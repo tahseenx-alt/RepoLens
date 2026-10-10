@@ -28,11 +28,16 @@ function unavailable(check, error) {
 }
 
 function readmeCheck(readme) {
-  const check = { id: 'readme', title: 'README', source: 'GET /repos/{owner}/{repo}/readme' }
+  const check = {
+    id: 'readme',
+    title: 'README',
+    source: 'GET /repos/{owner}/{repo}/community/profile (or /readme)',
+  }
   if (readme.status === 'loading') return pending(check)
   if (readme.status === 'error') return unavailable(check, readme.error)
   if (readme.data.found) {
-    return { ...check, status: 'passed', summary: `Found ${readme.data.file.path}.` }
+    const path = readme.data.file?.path
+    return { ...check, status: 'passed', summary: path ? `Found ${path}.` : 'Found a README.' }
   }
   return {
     ...check,

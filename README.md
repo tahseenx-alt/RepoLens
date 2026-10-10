@@ -115,6 +115,23 @@ The application is designed to support public repository analysis without requir
 - Language byte counts represent the approximate distribution of detected language bytes, not exact lines of code.
 - Basic repository health checks are indicators for further investigation, not a guarantee of code quality or security.
 
+### Requests, saved data and rate limits
+
+Without signing in, GitHub allows 60 requests per hour for each IP address. RepoLens never uses a token, so it keeps the number of requests low instead:
+
+- **About 5 requests per repository.** The overview asks for the repository, its languages, commits, contributors and community profile (which also tells RepoLens whether a README exists). The issues and pull requests list is only requested when the **Issues & PRs** tab is first opened. Forks skip the community profile, because GitHub doesn't provide it for them, and check `/readme` instead.
+- **No duplicate requests.** Sections that need the same data share one request.
+- **Saved answers.** Successful answers are kept in memory and in this browser's `localStorage`, trimmed to the fields the dashboard uses. Opening the same repository again within the time below costs no requests.
+
+  | Data | Reused for |
+  |---|---|
+  | Languages, README, community profile | 6 hours |
+  | Contributors | 1 hour |
+  | Repository details, commits, issues and pull requests | 10 minutes |
+
+- **Clear labels.** The header shows when the data on screen was fetched ("Data from 9:55 AM"; hover it to see each section's time). **Refresh** asks GitHub again. **Clear history** also removes the saved answers. At most 60 answers are stored, and the oldest are removed first.
+- **Rate limits (HTTP 403 and 429).** When GitHub refuses a request, RepoLens stops sending requests until GitHub's reset time (or the `retry-after` time it gives), shows that time in the error message and the footer, and keeps the **Try again** button disabled until then. If an older saved answer exists (up to 7 days old), it is shown with a warning that says how old it is, instead of being presented as current. Missing data is shown as unavailable, never as zero.
+
 ## Deployment on Render
 
 RepoLens can be deployed as a static site using Render's free static-site hosting option, subject to the platform's current usage limits and terms.

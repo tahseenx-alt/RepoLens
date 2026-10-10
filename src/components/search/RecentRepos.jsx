@@ -15,7 +15,12 @@ function RecentRepos({ history, onClear }) {
           <History size={14} aria-hidden="true" />
           Recently analyzed
         </h2>
-        <button type="button" className="text-button" onClick={onClear}>
+        <button
+          type="button"
+          className="text-button"
+          onClick={onClear}
+          title="Also removes the GitHub data saved in this browser"
+        >
           Clear history
         </button>
       </div>

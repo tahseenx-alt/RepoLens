@@ -1,4 +1,6 @@
 import { CircleSlash, RefreshCw, TriangleAlert } from 'lucide-react'
+import { useTimeReached } from '../../hooks/useTimeReached.js'
+import { formatClock } from '../../utils/format.js'
 
 // Shared loading, error and empty states, so every section behaves the same.
 
@@ -15,6 +17,10 @@ export function LoadingState({ label = 'Loading…', lines = 3 }) {
 
 export function ErrorState({ error, onRetry, title = "Couldn't load this section" }) {
   const isRateLimit = error?.type === 'rate-limit'
+  // After a rate limit, trying again before GitHub resets can't work,
+  // so the button waits until then.
+  const retryAt = isRateLimit ? error.retryAt : null
+  const canRetry = useTimeReached(retryAt)
   return (
     <div className="state-error fade-in" role="alert">
       <TriangleAlert size={16} aria-hidden="true" />
@@ -22,9 +28,9 @@ export function ErrorState({ error, onRetry, title = "Couldn't load this section
         <p className="state-title">{isRateLimit ? 'GitHub rate limit reached' : title}</p>
         <p className="state-text">{error?.message || 'Something went wrong. Please try again.'}</p>
         {onRetry && (
-          <button type="button" className="button button-small" onClick={onRetry}>
+          <button type="button" className="button button-small" onClick={onRetry} disabled={!canRetry}>
             <RefreshCw size={14} aria-hidden="true" />
-            Try again
+            {canRetry ? 'Try again' : `Try again after ${formatClock(retryAt)}`}
           </button>
         )}
       </div>
@@ -44,7 +50,7 @@ export function EmptyState({ children }) {
 // Shows the right state for a { status, data, error, retry } object
 // from useGitHubData. `children` is a function that receives the data.
 export function AsyncContent({ state, loadingLabel, lines, children }) {
-  if (state.status === 'loading') {
+  if (state.status === 'loading' || state.status === 'idle') {
     return <LoadingState label={loadingLabel} lines={lines} />
   }
   if (state.status === 'error') {

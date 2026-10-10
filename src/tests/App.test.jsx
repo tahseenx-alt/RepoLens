@@ -4,7 +4,16 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, useLocation } from 'react-router'
 import App from '../App.jsx'
 import ThemeProvider from '../components/layout/ThemeProvider.jsx'
-import { clearAllCache } from '../api/github.js'
+import {
+  clearAllCache,
+  fetchCommits,
+  fetchCommunityProfile,
+  fetchContributors,
+  fetchLanguages,
+  fetchReadme,
+  fetchRepository,
+  simulateReload,
+} from '../api/github.js'
 import { mockFetch } from './mockFetch.js'
 import { setMediaQuery } from './mockMatchMedia.js'
 import repo from './fixtures/repo.json'
@@ -65,7 +74,21 @@ function metric(label) {
 }
 
 beforeEach(() => clearAllCache())
-afterEach(() => vi.unstubAllGlobals())
+afterEach(() => {
+  vi.unstubAllGlobals()
+  vi.useRealTimers()
+})
+
+function rateLimitedResponse(resetInMinutes = 30) {
+  return {
+    status: 403,
+    body: { message: 'API rate limit exceeded for 1.2.3.4.' },
+    headers: {
+      'x-ratelimit-remaining': '0',
+      'x-ratelimit-reset': String(Math.floor((Date.now() + resetInMinutes * 60 * 1000) / 1000)),
+    },
+  }
+}
 
 describe('search', () => {
   it('shows a validation error without calling GitHub', async () => {
@@ -204,12 +227,17 @@ describe('dashboard tabs', () => {
     expect(within(health).getAllByText('Passed').length).toBeGreaterThan(0)
   })
 
-  it('switches tabs without new requests and keeps the tab in the address', async () => {
+  it('loads issues only when their tab opens, switches tabs without new requests, and keeps the tab in the address', async () => {
     const fetchMock = mockFetch(repoRoutes())
     renderAt('/tahseenx-alt/RepoLens')
     const user = userEvent.setup()
     await screen.findByText(commits[0].sha.slice(0, 7))
-    const callsBefore = fetchMock.mock.calls.length
+    await waitFor(() => expect(screen.queryByText('Checking…')).not.toBeInTheDocument())
+    // Repository, languages, commits, contributors and community profile.
+    // The README check reuses the community profile, and issues wait for their tab.
+    expect(fetchMock).toHaveBeenCalledTimes(5)
+    expect(fetchMock.mock.calls.some(([url]) => /\/issues\?/.test(url))).toBe(false)
+    expect(apiCalls(fetchMock, '/readme')).toHaveLength(0)
 
     await user.click(screen.getByRole('tab', { name: /issues & prs/i }))
     const issuesPanel = await screen.findByRole('region', { name: 'Issues and pull requests' })
@@ -223,7 +251,10 @@ describe('dashboard tabs', () => {
     expect(await screen.findByText(/Found README\.md/)).toBeInTheDocument()
     expect(screen.getByText(/didn't detect a license/i)).toBeInTheDocument()
 
-    expect(fetchMock.mock.calls.length).toBe(callsBefore)
+    // Going back to Issues & PRs reuses the answer.
+    await user.click(screen.getByRole('tab', { name: /issues & prs/i }))
+    expect(await screen.findByText(issues[0].title)).toBeInTheDocument()
+    expect(fetchMock).toHaveBeenCalledTimes(6)
   })
 
   it('lists commits with author, date, short SHA and link', async () => {
@@ -281,6 +312,7 @@ describe('errors, empty data and switching repositories', () => {
         commits: { status: 409, body: { message: 'Git Repository is empty.' } },
         contributors: { status: 204 },
         issues: { body: [] },
+        community: { body: { ...community, files: { ...community.files, readme: null } } },
         readme: { status: 404, body: { message: 'Not Found' } },
       }),
     )
@@ -341,13 +373,32 @@ describe('errors, empty data and switching repositories', () => {
     expect(screen.queryByRole('button', { name: /try again/i })).not.toBeInTheDocument()
   })
 
-  it('offers a retry when the rate limit is reached', async () => {
+  it('explains the rate limit, with the reset time, and waits for it before retrying', async () => {
+    const fetchMock = mockFetch([[BASE, rateLimitedResponse(30)]])
+    renderAt('/tahseenx-alt/RepoLens')
+    expect(await screen.findByText('GitHub rate limit reached')).toBeInTheDocument()
+    expect(screen.getByText(/allows 60 requests per hour.*resets at \d/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /try again after \d/i })).toBeDisabled()
+    // The footer shows the quota GitHub reported.
+    expect(screen.getByText(/GitHub API: no requests left until \d/)).toBeInTheDocument()
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('waits a minute when GitHub gives no reset time', async () => {
     mockFetch([
-      [BASE, { status: 403, body: { message: 'API rate limit exceeded' }, headers: { 'x-ratelimit-remaining': '0' } }],
+      [
+        BASE,
+        {
+          status: 403,
+          body: { message: 'API rate limit exceeded' },
+          headers: { 'x-ratelimit-remaining': '0', 'x-ratelimit-reset': '' },
+        },
+      ],
     ])
     renderAt('/tahseenx-alt/RepoLens')
     expect(await screen.findByText('GitHub rate limit reached')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument()
+    expect(screen.getByText(/request limit has been reached\. Try again after \d/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /try again after/i })).toBeDisabled()
   })
 
   it('explains network failures', async () => {
@@ -378,6 +429,80 @@ describe('errors, empty data and switching repositories', () => {
     )
     await user.click(within(recent).getByRole('button', { name: /clear history/i }))
     expect(screen.queryByRole('region', { name: /recently analyzed/i })).not.toBeInTheDocument()
+  })
+})
+
+describe('saved data', () => {
+  it('opens a repository again after a reload without asking GitHub', async () => {
+    const fetchMock = mockFetch(repoRoutes())
+    const { unmount } = renderAt('/tahseenx-alt/RepoLens')
+    await screen.findByText(commits[0].sha.slice(0, 7))
+    await waitFor(() => expect(screen.queryByText('Checking…')).not.toBeInTheDocument())
+    const calls = fetchMock.mock.calls.length
+    unmount()
+
+    simulateReload()
+    renderAt('/tahseenx-alt/RepoLens')
+    expect(await screen.findByText(commits[0].sha.slice(0, 7))).toBeInTheDocument()
+    expect(screen.getByText(/^Data from/)).toBeInTheDocument()
+    expect(screen.queryByText(/saved data from/i)).not.toBeInTheDocument()
+    expect(fetchMock.mock.calls.length).toBe(calls)
+  })
+
+  it('labels old saved data when the rate limit stops it from updating', async () => {
+    // Save answers two hours ago.
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(Date.now() - 2 * 60 * 60 * 1000)
+    mockFetch(repoRoutes('tahseenx-alt', 'RepoLens', { repo: { body: { ...repo, stargazers_count: 12 } } }))
+    await Promise.all([
+      fetchRepository('tahseenx-alt', 'RepoLens'),
+      fetchLanguages('tahseenx-alt', 'RepoLens'),
+      fetchCommits('tahseenx-alt', 'RepoLens'),
+      fetchContributors('tahseenx-alt', 'RepoLens'),
+      fetchCommunityProfile('tahseenx-alt', 'RepoLens'),
+      fetchReadme('tahseenx-alt', 'RepoLens'),
+    ])
+    vi.useRealTimers()
+
+    // Now GitHub refuses every request.
+    simulateReload()
+    const fetchMock = mockFetch([[/./, rateLimitedResponse(30)]])
+    renderAt('/tahseenx-alt/RepoLens')
+
+    await screen.findByRole('heading', { level: 1 })
+    expect(metric('Stars')).toHaveTextContent('12')
+    const notice = await screen.findByText(/request limit has been reached, so .* saved data from/i)
+    expect(notice).toHaveTextContent(/Repository details/)
+    expect(notice).toHaveTextContent(/Commits/)
+    expect(notice).toHaveTextContent(/limit resets at \d/)
+    // Languages are still fresh after two hours, so they aren't called old.
+    expect(notice).not.toHaveTextContent(/Languages/)
+    // Only the first request was sent; after that RepoLens waits for the reset.
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not request the community profile for a fork', async () => {
+    const fetchMock = mockFetch(
+      repoRoutes('tahseenx-alt', 'RepoLens', { repo: { body: { ...repo, fork: true } } }),
+    )
+    renderAt('/tahseenx-alt/RepoLens?tab=health')
+    expect(await screen.findByText(/community profile data for forks/i)).toBeInTheDocument()
+    expect(await screen.findByText(/Found README\.md/)).toBeInTheDocument()
+    expect(apiCalls(fetchMock, '/community/profile')).toHaveLength(0)
+    expect(apiCalls(fetchMock, '/readme')).toHaveLength(1)
+  })
+
+  it('removes saved data together with the history', async () => {
+    mockFetch(repoRoutes())
+    const { unmount } = renderAt('/tahseenx-alt/RepoLens')
+    await screen.findByText(repo.description)
+    unmount()
+    expect(Object.keys(window.localStorage).some((key) => key.startsWith('repolens:api:'))).toBe(true)
+
+    renderAt('/')
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: /clear history/i }))
+    expect(Object.keys(window.localStorage).some((key) => key.startsWith('repolens:api:'))).toBe(false)
   })
 })
 

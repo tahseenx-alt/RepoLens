@@ -61,7 +61,8 @@ function HomePage() {
           </ul>
           <p className="home-note">
             Uses GitHub&apos;s public API without a token: about 60 requests per hour from your
-            network, and one repository takes 7.
+            network, and one repository takes about 5. Answers are saved in this browser, so
+            opening a repository again soon costs nothing.
           </p>
         </section>
       </div>
