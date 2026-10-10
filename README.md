@@ -1,127 +1,137 @@
-# RepoLens 🔍
+<div align="center">
+
+# 🔍 RepoLens
+
 ### GitHub Repository Intelligence Dashboard
 
 **Understand any public GitHub repository at a glance.**
 
-RepoLens is a web-based repository analysis tool that transforms GitHub data into clear statistics, visualizations, and actionable insights. It helps developers understand repository activity, explore programming languages, analyze contributors, and assess basic repository health through a unified dashboard.
+### 🌐 [Live Demo: repolens-7lir.onrender.com](https://repolens-7lir.onrender.com)
 
-## Overview
+[Features](#-features) · [Getting started](#-getting-started) · [How it works](#-how-it-works) · [Deployment](#-deployment) · [Roadmap](#-roadmap)
 
-Understanding a repository often requires navigating multiple GitHub pages to examine commits, contributors, programming languages, issues, and project metadata.
+</div>
 
-RepoLens brings this information together in one place, making repository exploration faster, simpler, and more intuitive.
+---
 
-## Features
+## 📖 About
 
-- **Repository Overview** — Explore repository details, stars, forks, watchers, open issues, and other key statistics.
-- **Language Analytics** — Visualize programming language distribution using data from GitHub.
-- **Commit Activity** — Explore recent development activity through charts and commit history.
-- **Contributor Insights** — View contributor profiles and contribution counts.
-- **Recent Commits** — Review commit messages, authors, dates, and links to individual commits.
-- **Issues and Pull Requests** — Examine repository issues and pull-request activity.
-- **Repository Health Checks** — Identify potential improvements involving documentation, licensing, metadata, and recent activity.
-- **Light and Dark Themes** — Switch between themes for a comfortable viewing experience.
-- **Responsive Interface** — Use the dashboard across desktop, tablet, and mobile devices.
-- **Error Handling** — Receive appropriate feedback for invalid repositories, network failures, and GitHub API rate limits.
+RepoLens is a web application that turns data from the GitHub REST API into a clear, single-screen dashboard for any public repository. Enter a repository name or paste its link, and RepoLens shows its key statistics, language breakdown, commit activity, top contributors, recent issues and pull requests, and a set of basic health checks.
 
-*Feature availability depends on the current implementation and the data returned by GitHub.*
+Reviewing a repository on GitHub usually means opening several pages one after another. RepoLens brings that information together so developers, reviewers and students can judge a project's activity and upkeep in a few seconds.
 
-## Technology Stack
+- **No sign-in or token required.** RepoLens only reads public data.
+- **No backend.** It is a static single-page app that talks to GitHub directly from the browser.
+- **Careful with GitHub's rate limit.** Requests are kept to a minimum, responses are cached, and rate-limit errors are handled clearly.
+
+## ✨ Features
+
+### Repository search
+- Accepts `owner/repo`, `github.com/owner/repo`, full HTTPS links (including `.git` and deep links such as `/tree/main/...`) and SSH clone addresses (`git@github.com:owner/repo.git`).
+- Validates input before any request is sent and explains what is wrong with an invalid entry.
+- Remembers the 8 most recently analyzed repositories on the start page, with a one-click **Clear history**.
+
+### Dashboard
+Each repository has its own shareable address (for example `/facebook/react`), and the open tab is part of the link (`?tab=issues`). A header above the tabs shows the repository's stars, forks, watchers, open issues, license, topics and links to GitHub and the project homepage.
+
+| Tab | What it shows |
+|---|---|
+| **Overview** | A language breakdown, a commit activity chart, the latest commits, top contributors and a health summary on one screen. |
+| **Commits** | The latest 100 commits on the default branch with message, author, date and a link to each commit. The activity chart groups them by day, week or month, filtered to all fetched commits, the last 90 days or the last 30 days. |
+| **Contributors** | The top 20 contributors by commit count, with avatars and profile links. |
+| **Issues & PRs** | The 30 most recently updated issues and pull requests, filterable by type, with clear states (open, draft, merged, completed, not planned, closed). |
+| **Health** | Eight rule-based checks, each with the GitHub data it is based on and a suggestion when something can be improved. |
+
+### Health checks
+RepoLens checks for a **README**, a recognized **license**, a **description**, **topics**, a **contributing guide**, **recent commits** (warns after 6 months without one), an enabled **issue tracker**, and whether the repository is **archived**. Each check is marked as passed, warning, unavailable or pending. There is deliberately no overall score: the checks are signals for further review, not a measure of code quality or security.
+
+### Experience
+- **Light and dark themes** that follow the operating system until you pick one, with no flash of the wrong theme on load.
+- **Responsive layout** for desktop, tablet and mobile.
+- **Accessible interface:** keyboard-navigable tabs, a skip link, labeled controls and support for reduced motion.
+- **Clear loading, empty and error states** for missing repositories, empty repositories, network failures and rate limits. Missing data is shown as unavailable, never as zero.
+
+## 🛠️ Tech Stack
 
 | Technology | Purpose |
 |---|---|
-| React | User interface development |
-| JavaScript (ES6+) | Application logic |
-| Vite | Development server and build tooling |
-| CSS / Tailwind CSS | Styling and responsive layouts |
-| Recharts | Data visualization |
-| Lucide React | Interface icons |
-| GitHub REST API | Repository and contributor data |
-| Git and GitHub | Version control and source code hosting |
-| Render | Static website deployment |
+| [React 19](https://react.dev/) | User interface |
+| [React Router 7](https://reactrouter.com/) | Shareable repository and tab URLs |
+| [Vite 8](https://vite.dev/) | Development server and production build |
+| [Recharts 3](https://recharts.org/) | Commit activity chart |
+| [Lucide React](https://lucide.dev/) | Icons |
+| Plain CSS with custom properties | Styling, theming and responsive layout |
+| [GitHub REST API](https://docs.github.com/en/rest) | Repository data |
+| [Vitest](https://vitest.dev/) and [Testing Library](https://testing-library.com/) | Unit and component tests |
+| [Oxlint](https://oxc.rs/) | Linting |
+| [Render](https://render.com/) | Static site hosting |
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
-Install the following tools:
-
-- [Node.js](https://nodejs.org/)
-- npm, included with Node.js
+- [Node.js](https://nodejs.org/) **22.12 or newer** (the repository pins Node 22 in `.node-version`)
+- npm, which comes with Node.js
 - [Git](https://git-scm.com/)
 
-### 1. Clone the repository
+### Installation
 
 ```bash
 git clone https://github.com/tahseenx-alt/RepoLens.git
-```
-
-### 2. Navigate to the project directory
-
-```bash
 cd RepoLens
-```
-
-### 3. Install dependencies
-
-```bash
 npm install
-```
-
-### 4. Start the development server
-
-```bash
 npm run dev
 ```
 
-Open the local URL displayed in your terminal, usually `http://localhost:5173`.
+Then open the URL shown in your terminal, usually `http://localhost:5173`.
 
-### 5. Create a production build
+No environment variables or API keys are needed.
 
-```bash
-npm run build
-```
+### Available scripts
 
-To preview the production build locally:
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the development server with hot reload |
+| `npm run build` | Create an optimized production build in `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm test` | Run the test suite once |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run test:coverage` | Run tests with a coverage report |
+| `npm run lint` | Lint the source code with Oxlint |
 
-```bash
-npm run preview
-```
+## 🧭 Usage
 
-## How to Use RepoLens
+1. Open [RepoLens](https://repolens-7lir.onrender.com) in your browser, or run it locally.
+2. Type a public repository such as `facebook/react`, or paste its GitHub link.
+3. Press **Analyze**.
+4. Use the tabs to explore the overview, commits, contributors, issues and pull requests, and health checks.
+5. Use **Refresh** in the header to fetch fresh data, and the theme toggle to switch between light and dark.
 
-1. Open RepoLens in your browser.
-2. Enter a public GitHub repository in `owner/repository` format or paste its GitHub URL.
-3. Click **Analyze**.
-4. Explore the repository overview, language distribution, commit activity, contributors, issues, and health checks.
-5. Switch between light and dark themes according to your preference.
+Try it with [facebook/react](https://github.com/facebook/react), [vitejs/vite](https://github.com/vitejs/vite) or [tahseenx-alt/RepoLens](https://github.com/tahseenx-alt/RepoLens).
 
-For example, try:
+## ⚙️ How It Works
 
-- [facebook/react](https://github.com/facebook/react)
-- [vitejs/vite](https://github.com/vitejs/vite)
+### Data from GitHub
 
-## GitHub API
+RepoLens calls the public GitHub REST API without authentication:
 
-RepoLens uses the GitHub REST API to retrieve public repository information.
+| Endpoint | Used for |
+|---|---|
+| `GET /repos/{owner}/{repo}` | Repository details and several health checks |
+| `GET /repos/{owner}/{repo}/languages` | Language breakdown |
+| `GET /repos/{owner}/{repo}/commits` | Latest 100 commits and activity chart |
+| `GET /repos/{owner}/{repo}/contributors` | Top 20 contributors |
+| `GET /repos/{owner}/{repo}/community/profile` | README and contributing guide checks |
+| `GET /repos/{owner}/{repo}/readme` | README check for forks, which have no community profile |
+| `GET /repos/{owner}/{repo}/issues` | 30 most recently updated issues and pull requests |
 
-The application is designed to support public repository analysis without requiring users to sign in.
+### Staying within the rate limit
 
-**API limitations:**
+Without a token, GitHub allows **60 requests per hour per IP address**. RepoLens is built around that limit:
 
-- Unauthenticated requests are subject to GitHub's rate limits.
-- Some information may be unavailable for particular repositories.
-- Analytics depend on the endpoints, permissions, and data returned by GitHub.
-- Language byte counts represent the approximate distribution of detected language bytes, not exact lines of code.
-- Basic repository health checks are indicators for further investigation, not a guarantee of code quality or security.
-
-### Requests, saved data and rate limits
-
-Without signing in, GitHub allows 60 requests per hour for each IP address. RepoLens never uses a token, so it keeps the number of requests low instead:
-
-- **About 5 requests per repository.** The overview asks for the repository, its languages, commits, contributors and community profile (which also tells RepoLens whether a README exists). The issues and pull requests list is only requested when the **Issues & PRs** tab is first opened. Forks skip the community profile, because GitHub doesn't provide it for them, and check `/readme` instead.
+- **About 5 requests per repository.** Issues and pull requests are only requested when the **Issues & PRs** tab is first opened.
 - **No duplicate requests.** Sections that need the same data share one request.
-- **Saved answers.** Successful answers are kept in memory and in this browser's `localStorage`, trimmed to the fields the dashboard uses. Opening the same repository again within the time below costs no requests.
+- **Cached responses.** Successful responses are kept in memory and in the browser's `localStorage`, trimmed to the fields the dashboard uses. Reopening a repository within the cache window costs no requests.
 
   | Data | Reused for |
   |---|---|
@@ -129,77 +139,98 @@ Without signing in, GitHub allows 60 requests per hour for each IP address. Repo
   | Contributors | 1 hour |
   | Repository details, commits, issues and pull requests | 10 minutes |
 
-- **Clear labels.** The header shows when the data on screen was fetched ("Data from 9:55 AM"; hover it to see each section's time). **Refresh** asks GitHub again. **Clear history** also removes the saved answers. At most 60 answers are stored, and the oldest are removed first.
-- **Rate limits (HTTP 403 and 429).** When GitHub refuses a request, RepoLens stops sending requests until GitHub's reset time (or the `retry-after` time it gives), shows that time in the error message and the footer, and keeps the **Try again** button disabled until then. If an older saved answer exists (up to 7 days old), it is shown with a warning that says how old it is, instead of being presented as current. Missing data is shown as unavailable, never as zero.
+- **Transparent freshness.** The header shows when the data on screen was fetched, with per-section times on hover. At most 60 responses are stored, oldest removed first, and **Clear history** removes them all.
+- **Graceful rate limiting.** On an HTTP 403 or 429 rate-limit response, RepoLens pauses all requests until GitHub's reset time (or its `retry-after` value), shows that time, and disables **Try again** until then. If a saved response up to 7 days old exists, it is shown with a clear warning about its age instead of being presented as current.
 
-## Deployment on Render
+### Known limitations
 
-RepoLens can be deployed as a static site using Render's free static-site hosting option, subject to the platform's current usage limits and terms.
+- Commit analytics cover the latest 100 commits on the default branch, not the full history.
+- Language percentages are based on bytes detected by GitHub, not lines of code.
+- GitHub's open issue count includes open pull requests.
+- Only public repositories on github.com are supported.
 
-### Deployment steps
-
-1. Push the latest project code to GitHub.
-2. Sign in to [Render](https://render.com/).
-3. Create a new **Static Site**.
-4. Connect the `tahseenx-alt/RepoLens` repository.
-5. Configure the build settings:
-
-   | Setting | Value |
-   |---|---|
-   | Build command | `npm install && npm run build` |
-   | Publish directory | `dist` |
-
-6. Deploy the site.
-7. Open the generated public URL and test the application.
-
-If client-side routing is enabled, configure an appropriate rewrite rule so direct navigation to application routes works correctly.
-
-Render's free hosting availability, limits, and policies may change over time.
-
-## Project Structure
-
-The project follows a component-based React architecture.
+## 🗂️ Project Structure
 
 ```text
 RepoLens/
-├── public/              # Static assets
+├── public/                  # Static assets (favicon)
 ├── src/
-│   ├── api/             # GitHub API integration
-│   ├── components/      # Reusable UI components
-│   ├── assets/          # Images and other assets
-│   ├── App.jsx          # Main application
-│   ├── App.css          # Application styles
-│   └── main.jsx         # React entry point
+│   ├── api/                 # GitHub API client, response cache and rate-limit tracking
+│   ├── components/
+│   │   ├── charts/          # Commit activity chart and language breakdown
+│   │   ├── dashboard/       # Dashboard tabs, panels and repository header
+│   │   ├── layout/          # Site header, footer and theme provider/toggle
+│   │   ├── search/          # Search form and recent repositories
+│   │   └── ui/              # Shared panels, tabs and loading/empty/error states
+│   ├── hooks/               # Data loading, rate limit, history and media hooks
+│   ├── pages/               # Home, dashboard and not-found pages
+│   ├── styles/              # Global, layout, home and dashboard styles
+│   ├── tests/               # Vitest test suites and GitHub API fixtures
+│   ├── theme/               # Light/dark theme logic and chart colors
+│   ├── utils/               # Input parsing, analytics, health checks and formatting
+│   ├── App.jsx              # App shell and routes
+│   └── main.jsx             # React entry point
 ├── index.html
-├── package.json
-├── package-lock.json
+├── render.yaml              # Render Blueprint for static deployment
 ├── vite.config.js
-└── README.md
+└── package.json
 ```
 
-*The exact directory structure may vary as the project evolves.*
+## 🧪 Testing
 
-## Future Improvements
+The project uses Vitest with Testing Library and jsdom. Tests run against recorded GitHub API fixtures, so they need no network access and never touch the real rate limit. They cover input parsing, analytics, health checks, history, caching, rate-limit handling, hooks and the main app flows.
 
-Potential enhancements include:
+```bash
+npm test
+```
 
-- Repository comparison.
-- Exportable analysis reports.
-- More advanced contribution and activity analytics.
-- Improved repository health rules.
-- Historical activity comparisons.
-- Additional accessibility and performance improvements.
+## ☁️ Deployment
 
-## Author
+The live version of RepoLens is hosted on Render at **[https://repolens-7lir.onrender.com](https://repolens-7lir.onrender.com)**.
+
+RepoLens is a static site and can be hosted anywhere that serves static files. The repository includes a [Render Blueprint](render.yaml) for one-step deployment.
+
+### Render (Blueprint)
+
+1. Sign in to [Render](https://render.com/) and choose **New → Blueprint**.
+2. Connect the `tahseenx-alt/RepoLens` repository. Render reads `render.yaml` automatically.
+
+### Render (manual)
+
+Create a **Static Site** with these settings:
+
+| Setting | Value |
+|---|---|
+| Build command | `npm ci && npm run build` |
+| Publish directory | `dist` |
+| Rewrite rule | Source `/*`, destination `/index.html` |
+
+The rewrite rule lets direct links such as `/facebook/react` load correctly, because routing happens in the browser.
+
+## 🔮 Roadmap
+
+These features are **planned** and not yet implemented:
+
+- [ ] Side-by-side repository comparison
+- [ ] Shareable and exportable analysis reports
+- [ ] Deeper activity insights beyond the latest 100 commits
+- [ ] More detailed repository health rules
+- [ ] AI-powered repository summaries
+
+## 👨‍💻 Author
 
 **Tahseen Anwer**
 
-GitHub: [@tahseenx-alt](https://github.com/tahseenx-alt)
+- GitHub: [@tahseenx-alt](https://github.com/tahseenx-alt)
 
-## License
+## 📄 License
 
-No license has been specified here. Add a license file to the repository if you intend to define the terms under which others may use, modify, or distribute the project.
+No license has been chosen for this project yet. Until a `LICENSE` file is added, default copyright applies and all rights are reserved by the author.
 
 ---
 
-*RepoLens — Making GitHub repository analysis clearer, faster, and more accessible.*
+<div align="center">
+
+*Built to make understanding GitHub repositories simpler and more intuitive.*
+
+</div>
