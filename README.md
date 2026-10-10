@@ -6,13 +6,17 @@
 
 **Understand any public GitHub repository at a glance.**
 
+### 🌐 [Live Demo: repolens-7lir.onrender.com](https://repolens-7lir.onrender.com)
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Open%20RepoLens-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://repolens-7lir.onrender.com)
+
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
 ![Recharts](https://img.shields.io/badge/Recharts-3-22B5BF)
 ![Node](https://img.shields.io/badge/Node-%E2%89%A522.12-339933?logo=node.js&logoColor=white)
 ![Tested with Vitest](https://img.shields.io/badge/tested%20with-Vitest-6E9F18?logo=vitest&logoColor=white)
 
-[Features](#-features) · [Screenshots](#-screenshots) · [Getting started](#-getting-started) · [How it works](#-how-it-works) · [Deployment](#-deployment) · [Roadmap](#-roadmap)
+[Features](#-features) · [Getting started](#-getting-started) · [How it works](#-how-it-works) · [Deployment](#-deployment) · [Roadmap](#-roadmap)
 
 </div>
 
@@ -54,16 +58,6 @@ RepoLens checks for a **README**, a recognized **license**, a **description**, *
 - **Responsive layout** for desktop, tablet and mobile.
 - **Accessible interface:** keyboard-navigable tabs, a skip link, labeled controls and support for reduced motion.
 - **Clear loading, empty and error states** for missing repositories, empty repositories, network failures and rate limits. Missing data is shown as unavailable, never as zero.
-
-## 🖼️ Screenshots
-
-| Dashboard (light) | Dashboard (dark) |
-|---|---|
-| ![RepoLens dashboard in light theme](docs/screenshots/dashboard-light.png) | ![RepoLens dashboard in dark theme](docs/screenshots/dashboard-dark.png) |
-
-| Start page (dark) | Mobile (light) |
-|---|---|
-| ![RepoLens start page in dark theme](docs/screenshots/home-dark.png) | ![RepoLens on a mobile screen](docs/screenshots/mobile-light.png) |
 
 ## 🛠️ Tech Stack
 
@@ -115,7 +109,7 @@ No environment variables or API keys are needed.
 
 ## 🧭 Usage
 
-1. Open RepoLens in your browser.
+1. Open [RepoLens](https://repolens-7lir.onrender.com) in your browser, or run it locally.
 2. Type a public repository such as `facebook/react`, or paste its GitHub link.
 3. Press **Analyze**.
 4. Use the tabs to explore the overview, commits, contributors, issues and pull requests, and health checks.
@@ -167,7 +161,7 @@ Without a token, GitHub allows **60 requests per hour per IP address**. RepoLens
 
 ```text
 RepoLens/
-├── docs/screenshots/        # README screenshots
+├── docs/screenshots/        # App screenshots
 ├── public/                  # Static assets (favicon)
 ├── src/
 │   ├── api/                 # GitHub API client, response cache and rate-limit tracking
@@ -200,6 +194,8 @@ npm test
 ```
 
 ## ☁️ Deployment
+
+The live version of RepoLens is hosted on Render at **[https://repolens-7lir.onrender.com](https://repolens-7lir.onrender.com)**.
 
 RepoLens is a static site and can be hosted anywhere that serves static files. The repository includes a [Render Blueprint](render.yaml) for one-step deployment.
 
