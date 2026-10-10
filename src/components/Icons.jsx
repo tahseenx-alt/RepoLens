@@ -91,3 +91,65 @@ export function HeartPulseIcon(props) {
     </Icon>
   )
 }
+
+export function StarIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+    </Icon>
+  )
+}
+
+export function ForkIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="18" r="3" />
+      <circle cx="6" cy="6" r="3" />
+      <circle cx="18" cy="6" r="3" />
+      <path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9M12 12v3" />
+    </Icon>
+  )
+}
+
+export function IssueIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="1" />
+    </Icon>
+  )
+}
+
+export function CodeIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="m16 18 6-6-6-6M8 6l-6 6 6 6" />
+    </Icon>
+  )
+}
+
+export function CalendarIcon(props) {
+  return (
+    <Icon {...props}>
+      <rect width="18" height="18" x="3" y="4" rx="2" />
+      <path d="M16 2v4M8 2v4M3 10h18" />
+    </Icon>
+  )
+}
+
+export function ExternalLinkIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+    </Icon>
+  )
+}
+
+export function AlertIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 8v4M12 16h.01" />
+    </Icon>
+  )
+}
