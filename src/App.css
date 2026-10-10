@@ -364,6 +364,269 @@
   margin: 0;
 }
 
+/* ---------- Analytics dashboard ---------- */
+.analytics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.analytics-card {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--surface), var(--bg-elevated));
+}
+
+.analytics-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.analytics-card-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: var(--primary-hover);
+  border-radius: 10px;
+  background: rgba(99, 102, 241, 0.14);
+}
+
+.analytics-card-header h3 {
+  font-size: 16px;
+}
+
+.analytics-card-header p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.analytics-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 140px;
+  color: var(--text-muted);
+}
+
+.analytics-empty,
+.analytics-note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.analytics-note {
+  margin-top: 12px;
+  color: var(--text-dim);
+}
+
+.error-message-small {
+  padding: 12px 14px;
+  font-size: 14px;
+}
+
+/* Languages */
+.language-bar {
+  display: flex;
+  gap: 2px;
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.language-segment {
+  min-width: 2px;
+}
+
+.language-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 20px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+
+.language-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.language-dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.language-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.language-percent {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Commit activity */
+.activity-summary {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.activity-summary strong {
+  font-size: 18px;
+  color: var(--text);
+}
+
+.activity-chart {
+  height: 200px;
+}
+
+.chart-tooltip {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.chart-tooltip strong {
+  color: var(--text);
+}
+
+/* Contributors */
+.contributor-list,
+.commit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contributor-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contributor-list img {
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.contributor-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.contributor-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.contributor-row a {
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contributor-row a:hover {
+  color: var(--blue);
+}
+
+.contributor-row span {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.contributor-bar {
+  height: 4px;
+  margin-top: 6px;
+  border-radius: 999px;
+  background: var(--border);
+}
+
+.contributor-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--purple);
+}
+
+/* Recent commits */
+.commit-list li {
+  min-width: 0;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.commit-list li:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.commit-title {
+  display: block;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.commit-title:hover {
+  color: var(--blue);
+}
+
+.commit-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.commit-meta img {
+  border-radius: 50%;
+}
+
+.commit-meta code {
+  margin-left: auto;
+  font-size: 12px;
+}
+
 /* ---------- Feature cards ---------- */
 .features {
   padding: 48px 0 96px;
@@ -446,6 +709,13 @@
   }
 }
 
+/* Smaller screens: analytics cards stack in one column. */
+@media (max-width: 820px) {
+  .analytics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* Phones: stack everything in one column. */
 @media (max-width: 600px) {
   .container {
@@ -484,7 +754,12 @@
     grid-template-columns: 1fr;
   }
 
-  .repo-card {
+  .repo-card,
+  .analytics-card {
     padding: 18px;
+  }
+
+  .language-list {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
