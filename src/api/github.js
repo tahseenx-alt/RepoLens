@@ -222,6 +222,12 @@ function repoPath(owner, repo) {
   return `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`
 }
 
+// When the repository details currently shown were received from GitHub.
+export function getRepositoryFetchedAt(owner, repo) {
+  const entry = cache.get(repoPath(owner, repo))
+  return entry ? new Date(entry.savedAt) : null
+}
+
 // ---------- One function per piece of data ----------
 
 // The repository's details: stars, forks, license, dates and so on.

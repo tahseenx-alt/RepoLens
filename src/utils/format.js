@@ -14,9 +14,16 @@ const dateFormat = new Intl.DateTimeFormat('en', {
 })
 const shortDateFormat = new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric' })
 
-// 228934 -> "228.9K". Missing values become an em dash.
+// True only for a real count from the API: a whole number, 0 or more.
+// Missing values (undefined, null) and odd values ("12", -1, NaN) are not counts.
+export function isCount(value) {
+  return Number.isInteger(value) && value >= 0
+}
+
+// 228934 -> "228.9K". Anything that isn't a real count becomes "Unavailable",
+// so a missing value is never shown as a made-up 0.
 export function formatCompact(value) {
-  return Number.isFinite(value) ? compactNumber.format(value) : '—'
+  return isCount(value) ? compactNumber.format(value) : 'Unavailable'
 }
 
 // 228934 -> "228,934".

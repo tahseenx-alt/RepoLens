@@ -8,5 +8,10 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: './src/tests/setup.js',
+    // npm run test:coverage shows which code the tests exercise.
+    coverage: {
+      include: ['src/**/*.{js,jsx}'],
+      exclude: ['src/tests/**', 'src/main.jsx'],
+    },
   },
 })

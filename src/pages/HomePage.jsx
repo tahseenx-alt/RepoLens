@@ -5,37 +5,18 @@ import RepoSearchForm from '../components/search/RepoSearchForm.jsx'
 import RecentRepos from '../components/search/RecentRepos.jsx'
 import { useRepoHistory } from '../hooks/useRepoHistory.js'
 
-// What the dashboard shows. Each item matches a real section.
-const FEATURES = [
-  {
-    Icon: Activity,
-    title: 'Commit activity',
-    text: 'Recent commits on the default branch, grouped by date, with the period clearly stated.',
-  },
-  {
-    Icon: Code,
-    title: 'Languages',
-    text: 'Byte counts and shares for every language GitHub detects.',
-  },
-  {
-    Icon: Users,
-    title: 'Contributors',
-    text: 'Top contributors by commit count, linked to their profiles.',
-  },
-  {
-    Icon: GitPullRequest,
-    title: 'Issues and pull requests',
-    text: 'Recently updated issues and PRs, kept apart and labeled by state.',
-  },
-  {
-    Icon: HeartPulse,
-    title: 'Health checks',
-    text: 'README, license, contributing guide and activity, each traced to a real check.',
-  },
+// What the dashboard shows. Each item matches a real tab or panel.
+const SECTIONS = [
+  { Icon: Activity, title: 'Commit activity', text: 'Recent commits on the default branch, by date.' },
+  { Icon: Code, title: 'Languages', text: 'Byte counts and shares per language.' },
+  { Icon: Users, title: 'Contributors', text: 'Top contributors by commit count.' },
+  { Icon: GitPullRequest, title: 'Issues & PRs', text: 'Recently updated, labeled by type and state.' },
+  { Icon: HeartPulse, title: 'Health checks', text: 'README, license, activity and more.' },
 ]
 
 const EXAMPLES = ['facebook/react', 'vitejs/vite', 'tahseenx-alt/RepoLens']
 
+// The start view: search, examples and recent history on one screen.
 function HomePage() {
   const { history, clear } = useRepoHistory()
 
@@ -44,48 +25,46 @@ function HomePage() {
   }, [])
 
   return (
-    <main id="main" className="home">
-      <section className="container home-intro" aria-labelledby="home-title">
-        <h1 id="home-title">Inspect any public GitHub repository.</h1>
+    <main id="main" className="home container fade-in">
+      <section className="home-search-area" aria-labelledby="home-title">
+        <h1 id="home-title">Analyze a public GitHub repository</h1>
         <p className="home-lead">
-          RepoLens pulls live data from the GitHub API and lays out activity, languages,
-          contributors, issues and basic health signals on one page. No sign-in needed.
+          Live data from the GitHub API: activity, languages, contributors, issues and basic
+          health checks. No sign-in needed.
         </p>
-
-        <div className="home-search">
-          <RepoSearchForm autoFocus />
-          <p className="home-examples">
-            Examples:{' '}
-            {EXAMPLES.map((name, index) => (
-              <span key={name}>
-                {index > 0 && ', '}
-                <Link to={`/${name}`}>{name}</Link>
-              </span>
-            ))}
-          </p>
-        </div>
-
-        <RecentRepos history={history} onClear={clear} />
-      </section>
-
-      <section className="container home-features" aria-labelledby="features-title">
-        <h2 id="features-title">What you get</h2>
-        <ul className="feature-list">
-          {FEATURES.map(({ Icon, title, text }) => (
-            <li key={title}>
-              <Icon size={16} aria-hidden="true" />
-              <div>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </div>
-            </li>
+        <RepoSearchForm autoFocus />
+        <p className="home-examples">
+          Try{' '}
+          {EXAMPLES.map((name, index) => (
+            <span key={name}>
+              {index > 0 && ', '}
+              <Link to={`/${name}`}>{name}</Link>
+            </span>
           ))}
-        </ul>
-        <p className="home-note">
-          RepoLens uses GitHub&apos;s unauthenticated API, which allows about 60 requests per hour
-          from your network. Analyzing one repository uses about 7.
         </p>
       </section>
+
+      <div className="home-side">
+        <RecentRepos history={history} onClear={clear} />
+
+        <section className="home-sections" aria-labelledby="sections-title">
+          <h2 id="sections-title">What the dashboard shows</h2>
+          <ul>
+            {SECTIONS.map(({ Icon, title, text }) => (
+              <li key={title}>
+                <Icon size={15} aria-hidden="true" />
+                <span>
+                  <strong>{title}.</strong> {text}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="home-note">
+            Uses GitHub&apos;s public API without a token: about 60 requests per hour from your
+            network, and one repository takes 7.
+          </p>
+        </section>
+      </div>
     </main>
   )
 }

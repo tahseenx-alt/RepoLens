@@ -6,10 +6,10 @@ import HomePage from './pages/HomePage.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 
-// Pages:
-//   /              start page with the search form
+// One app shell with three views:
+//   /              start view with the search form
 //   /:owner/:repo  dashboard for one repository (shareable link)
-//   anything else  "not found" page
+//   anything else  "not found" view
 function App() {
   const { pathname } = useLocation()
   const isHome = pathname === '/'
@@ -19,9 +19,10 @@ function App() {
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      {/* The start page has its own big search box, so the header one is
-          only shown on the other pages. */}
-      <SiteHeader>{!isHome && <RepoSearchForm compact />}</SiteHeader>
+      {/* The start view has its own large search box, so the header one is
+          only shown elsewhere. `key` resets the form (and any old error
+          message) whenever the page changes. */}
+      <SiteHeader>{!isHome && <RepoSearchForm key={pathname} compact />}</SiteHeader>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/:owner/:repo" element={<DashboardPage />} />

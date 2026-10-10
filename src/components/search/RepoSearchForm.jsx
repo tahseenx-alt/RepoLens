@@ -16,6 +16,8 @@ function RepoSearchForm({ compact = false, autoFocus = false }) {
   const errorId = useId()
   const [value, setValue] = useState('')
   const [error, setError] = useState('')
+  // Counts errors, so the error message replays its small shake each time.
+  const [errorCount, setErrorCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const requestRef = useRef(null)
 
@@ -32,6 +34,7 @@ function RepoSearchForm({ compact = false, autoFocus = false }) {
     const parsed = parseRepoInput(value)
     if (!parsed.ok) {
       setError(parsed.error)
+      setErrorCount((count) => count + 1)
       return
     }
 
@@ -48,6 +51,7 @@ function RepoSearchForm({ compact = false, autoFocus = false }) {
     } catch (requestError) {
       if (requestError?.name !== 'AbortError') {
         setError(requestError.message || 'Something went wrong. Please try again.')
+        setErrorCount((count) => count + 1)
       }
     } finally {
       if (!controller.signal.aborted) {
@@ -102,7 +106,7 @@ function RepoSearchForm({ compact = false, autoFocus = false }) {
         </button>
       </div>
       {error && (
-        <p id={errorId} className="search-error" role="alert">
+        <p key={errorCount} id={errorId} className="search-error shake" role="alert">
           {error}
         </p>
       )}

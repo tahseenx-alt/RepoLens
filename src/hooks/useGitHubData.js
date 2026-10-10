@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const LOADING = { status: 'loading', data: null, error: null }
 
@@ -40,5 +40,7 @@ export function useGitHubData(load) {
   // new request is still loading.
   const isCurrent = result && result.load === load && result.attempt === attempt
   const { status, data, error } = isCurrent ? result : LOADING
-  return { status, data, error, retry }
+  // The same object is returned until something changes, so components
+  // that receive it don't re-render (or recalculate) for no reason.
+  return useMemo(() => ({ status, data, error, retry }), [status, data, error, retry])
 }

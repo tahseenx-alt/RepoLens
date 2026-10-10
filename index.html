@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -8,8 +8,26 @@
       name="description"
       content="RepoLens shows commit activity, languages, contributors, issues and basic health checks for any public GitHub repository."
     />
-    <meta name="theme-color" content="#0b0f17" />
+    <meta name="color-scheme" content="dark light" />
     <title>RepoLens</title>
+    <script>
+      // Pick the theme before the page draws, so it never flashes the wrong
+      // colors. Same rules as src/theme/theme.js: a saved choice first,
+      // otherwise the system setting.
+      try {
+        var saved = localStorage.getItem('repolens:theme')
+        var theme =
+          saved === 'light' || saved === 'dark'
+            ? saved
+            : matchMedia('(prefers-color-scheme: light)').matches
+              ? 'light'
+              : 'dark'
+        document.documentElement.dataset.theme = theme
+        document.documentElement.style.colorScheme = theme
+      } catch (error) {
+        // Keep the default dark theme.
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

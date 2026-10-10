@@ -10,9 +10,10 @@
 //
 // Returns { ok: true, owner, repo } or { ok: false, error }.
 
-// GitHub usernames: 1–39 letters, numbers or single dashes,
-// and they cannot start or end with a dash.
-const OWNER_PATTERN = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/
+// GitHub usernames: 1–39 letters, numbers or dashes, not starting or
+// ending with a dash. (New accounts can't use "--", but some old ones do,
+// so it is allowed here rather than rejecting a real repository.)
+const OWNER_PATTERN = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/
 // Repository names: up to 100 letters, numbers, dots, dashes or underscores.
 const REPO_PATTERN = /^[A-Za-z0-9._-]{1,100}$/
 

@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import GitHubMark from '../ui/GitHubMark.jsx'
+import ThemeToggle from './ThemeToggle.jsx'
 
 // The bar at the top of every page. Pages can pass a search form
 // (or anything else) as `children` to show it in the middle.
@@ -16,16 +17,19 @@ function SiteHeader({ children }) {
 
         {children && <div className="site-header-center">{children}</div>}
 
-        <a
-          href="https://github.com/tahseenx-alt/RepoLens"
-          className="header-link"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <GitHubMark size={16} />
-          <span className="header-link-text">Source</span>
-          <span className="sr-only">(RepoLens on GitHub, opens in a new tab)</span>
-        </a>
+        <div className="site-header-end">
+          <ThemeToggle />
+          <a
+            href="https://github.com/tahseenx-alt/RepoLens"
+            className="icon-button"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="RepoLens source code on GitHub (opens in a new tab)"
+            title="Source code on GitHub"
+          >
+            <GitHubMark size={16} />
+          </a>
+        </div>
       </div>
     </header>
   )

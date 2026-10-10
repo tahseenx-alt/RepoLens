@@ -16,7 +16,7 @@ export function LoadingState({ label = 'Loading…', lines = 3 }) {
 export function ErrorState({ error, onRetry, title = "Couldn't load this section" }) {
   const isRateLimit = error?.type === 'rate-limit'
   return (
-    <div className="state-error" role="alert">
+    <div className="state-error fade-in" role="alert">
       <TriangleAlert size={16} aria-hidden="true" />
       <div>
         <p className="state-title">{isRateLimit ? 'GitHub rate limit reached' : title}</p>
@@ -34,7 +34,7 @@ export function ErrorState({ error, onRetry, title = "Couldn't load this section
 
 export function EmptyState({ children }) {
   return (
-    <div className="state-empty">
+    <div className="state-empty fade-in">
       <CircleSlash size={16} aria-hidden="true" />
       <p>{children}</p>
     </div>
@@ -50,5 +50,27 @@ export function AsyncContent({ state, loadingLabel, lines, children }) {
   if (state.status === 'error') {
     return <ErrorState error={state.error} onRetry={state.retry} />
   }
-  return children(state.data)
+  // The content fades in as it replaces the loading placeholder.
+  return <div className="fade-in">{children(state.data)}</div>
+}
+
+// A placeholder shaped like the dashboard, shown while the repository loads,
+// so the page doesn't jump when the real content appears.
+export function DashboardSkeleton({ label }) {
+  return (
+    <div className="dashboard-skeleton" role="status">
+      <span className="sr-only">{label}</span>
+      <div className="skeleton-row" aria-hidden="true">
+        <span className="skeleton-block skeleton-avatar" />
+        <span className="skeleton-line" style={{ width: '30%' }} />
+      </div>
+      <span className="skeleton-line" style={{ width: '55%' }} aria-hidden="true" />
+      <span className="skeleton-block skeleton-strip" aria-hidden="true" />
+      <span className="skeleton-line" style={{ width: '40%' }} aria-hidden="true" />
+      <div className="skeleton-grid" aria-hidden="true">
+        <span className="skeleton-block" />
+        <span className="skeleton-block" />
+      </div>
+    </div>
+  )
 }

@@ -62,7 +62,7 @@ describe('route parameter validation', () => {
   })
 
   it('rejects names GitHub would not allow', () => {
-    expect(isValidOwner('a--b')).toBe(false)
+    expect(isValidOwner('a-')).toBe(false)
     expect(isValidOwner('x'.repeat(40))).toBe(false)
     expect(isValidOwner('orgs')).toBe(false)
     expect(isValidOwner(undefined)).toBe(false)
