@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { fetchRepository, parseRepoInput } from '../api/github.js'
 import RepoResult from './RepoResult.jsx'
+import RepoAnalytics from './RepoAnalytics.jsx'
 import { AlertIcon, ArrowRightIcon, SearchIcon } from './Icons.jsx'
 
 function Hero() {
@@ -124,6 +125,11 @@ function Hero() {
 
           {status === 'success' && repo && <RepoResult repo={repo} />}
         </div>
+
+        {/* key makes React start fresh for every new repository. */}
+        {status === 'success' && repo && (
+          <RepoAnalytics key={repo.id} fullName={repo.full_name} />
+        )}
       </div>
     </section>
   )

@@ -53,12 +53,20 @@ function formatResetTime(response) {
   return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
 }
 
-// Downloads one repository's details from GitHub.
-// `signal` lets the page cancel the request if a new search starts.
-export async function fetchRepository(owner, repo, signal) {
+// Answers we already received, so searching the same repository again
+// does not spend more of GitHub's rate limit.
+const cache = new Map()
+
+// Sends one GET request to GitHub and turns failures into friendly errors.
+// `notFoundMessage` is shown when GitHub answers 404.
+async function githubRequest(path, { signal, notFoundMessage } = {}) {
+  if (cache.has(path)) {
+    return cache.get(path)
+  }
+
   let response
   try {
-    response = await fetch(`${API_URL}/repos/${owner}/${repo}`, {
+    response = await fetch(`${API_URL}${path}`, {
       headers: { Accept: 'application/vnd.github+json' },
       signal,
     })
@@ -76,13 +84,16 @@ export async function fetchRepository(owner, repo, signal) {
   }
 
   if (response.ok) {
-    return response.json()
+    // 204 means "no content", e.g. contributors of an empty repository.
+    const data = response.status === 204 ? [] : await response.json()
+    cache.set(path, data)
+    return data
   }
 
   if (response.status === 404) {
     throw new GitHubError(
       'not-found',
-      `We couldn't find "${owner}/${repo}". Check the spelling, and make sure the repository is public.`,
+      notFoundMessage || 'GitHub could not find this information.',
     )
   }
 
@@ -99,8 +110,51 @@ export async function fetchRepository(owner, repo, signal) {
     )
   }
 
+  // GitHub sometimes explains the problem, e.g. "too large to list contributors".
+  let detail = ''
+  try {
+    detail = (await response.json()).message || ''
+  } catch {
+    // The body was not JSON; the status code is enough.
+  }
+
   throw new GitHubError(
     'unknown',
-    `GitHub returned an unexpected error (status ${response.status}). Please try again.`,
+    detail
+      ? `GitHub couldn't load this: ${detail.replace(/\.$/, '')}.`
+      : `GitHub returned an unexpected error (status ${response.status}). Please try again.`,
   )
+}
+
+// Downloads one repository's details from GitHub.
+// `signal` lets the page cancel the request if a new search starts.
+export function fetchRepository(owner, repo, signal) {
+  return githubRequest(`/repos/${owner}/${repo}`, {
+    signal,
+    notFoundMessage: `We couldn't find "${owner}/${repo}". Check the spelling, and make sure the repository is public.`,
+  })
+}
+
+// Bytes of code per language, e.g. { JavaScript: 52000, CSS: 4000 }.
+export function fetchLanguages(fullName, signal) {
+  return githubRequest(`/repos/${fullName}/languages`, { signal })
+}
+
+// The latest 100 commits (the most GitHub returns in one request).
+// One request feeds both the activity chart and the recent commits list.
+export async function fetchCommits(fullName, signal) {
+  try {
+    return await githubRequest(`/repos/${fullName}/commits?per_page=100`, { signal })
+  } catch (error) {
+    // GitHub answers 409 for a repository with no commits yet.
+    if (error.type === 'unknown' && /empty/i.test(error.message)) {
+      return []
+    }
+    throw error
+  }
+}
+
+// The top 10 contributors, sorted by number of commits.
+export function fetchContributors(fullName, signal) {
+  return githubRequest(`/repos/${fullName}/contributors?per_page=10`, { signal })
 }
