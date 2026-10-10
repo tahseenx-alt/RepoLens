@@ -1,0 +1,153 @@
+/* Global styles: colors, fonts and basic elements.
+   Every color is a variable here, so the theme is easy to change. */
+:root {
+  --bg: #0b0f17;
+  --surface: #10161f;
+  --surface-2: #151c27;
+  --surface-hover: #1a2230;
+  --border: #1f2836;
+  --border-strong: #2b3546;
+  --text: #e4e8ef;
+  --text-muted: #a1abbb;
+  --text-dim: #8b95a7;
+
+  /* The single accent color. */
+  --accent: #5b8def;
+  --accent-strong: #3d6fd9;
+  --accent-soft: rgba(91, 141, 239, 0.12);
+
+  /* Status colors, always paired with an icon or text. */
+  --success: #4cc38a;
+  --warning: #e0a53a;
+  --danger: #ef6b5b;
+  --merged: #a891f5;
+
+  --radius: 8px;
+  --radius-small: 6px;
+  --font: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+
+  color-scheme: dark;
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--bg);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+code,
+.mono {
+  font-family: var(--mono);
+  font-size: 0.88em;
+}
+
+code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* A clear focus ring for keyboard users on every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+/* Hides text visually but keeps it for screen readers. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -48px;
+  z-index: 100;
+  padding: 8px 12px;
+  border-radius: var(--radius-small);
+  background: var(--accent-strong);
+  color: #fff;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spin,
+  .skeleton-line {
+    animation: none !important;
+  }
+}
