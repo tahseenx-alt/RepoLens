@@ -8,14 +8,6 @@
 
 ### 🌐 [Live Demo: repolens-7lir.onrender.com](https://repolens-7lir.onrender.com)
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Open%20RepoLens-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://repolens-7lir.onrender.com)
-
-![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
-![Recharts](https://img.shields.io/badge/Recharts-3-22B5BF)
-![Node](https://img.shields.io/badge/Node-%E2%89%A522.12-339933?logo=node.js&logoColor=white)
-![Tested with Vitest](https://img.shields.io/badge/tested%20with-Vitest-6E9F18?logo=vitest&logoColor=white)
-
 [Features](#-features) · [Getting started](#-getting-started) · [How it works](#-how-it-works) · [Deployment](#-deployment) · [Roadmap](#-roadmap)
 
 </div>
@@ -161,7 +153,6 @@ Without a token, GitHub allows **60 requests per hour per IP address**. RepoLens
 
 ```text
 RepoLens/
-├── docs/screenshots/        # App screenshots
 ├── public/                  # Static assets (favicon)
 ├── src/
 │   ├── api/                 # GitHub API client, response cache and rate-limit tracking
