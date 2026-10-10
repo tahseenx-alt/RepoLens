@@ -1,0 +1,16 @@
+# Render Blueprint for RepoLens (a static site, no server needed).
+# Docs: https://render.com/docs/blueprint-spec
+# You can also create the static site by hand in the Render dashboard
+# with the same settings; see "Deploying to Render" in README.md.
+services:
+  - type: web
+    name: repolens
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    # Send every path (like /facebook/react) to index.html so React Router
+    # can show the right page. Real files in dist/ are still served first.
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
