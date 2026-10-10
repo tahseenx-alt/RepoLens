@@ -1,0 +1,30 @@
+{
+  "id": 1412760210,
+  "name": "RepoLens",
+  "full_name": "tahseenx-alt/RepoLens",
+  "owner": {
+    "login": "tahseenx-alt",
+    "avatar_url": "https://avatars.githubusercontent.com/u/210026946?v=4",
+    "html_url": "https://github.com/tahseenx-alt"
+  },
+  "html_url": "https://github.com/tahseenx-alt/RepoLens",
+  "description": "Build a website that analyzes any public GitHub repository and displays its information in one dashboard",
+  "fork": false,
+  "homepage": null,
+  "size": 2,
+  "stargazers_count": 0,
+  "watchers_count": 0,
+  "subscribers_count": 0,
+  "language": "JavaScript",
+  "has_issues": true,
+  "forks_count": 0,
+  "archived": false,
+  "open_issues_count": 0,
+  "license": null,
+  "topics": [],
+  "default_branch": "main",
+  "created_at": "2026-10-10T04:43:32Z",
+  "updated_at": "2026-10-10T07:42:35Z",
+  "pushed_at": "2026-10-10T07:42:31Z",
+  "visibility": "public"
+}

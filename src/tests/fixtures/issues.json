@@ -1,0 +1,78 @@
+[
+  {
+    "id": 5789267636,
+    "number": 4,
+    "title": "Add repository analytics: languages, activity, contributors, commits",
+    "state": "closed",
+    "state_reason": null,
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/pull/4",
+    "comments": 0,
+    "created_at": "2026-10-10T07:42:11Z",
+    "updated_at": "2026-10-10T07:42:31Z",
+    "closed_at": "2026-10-10T07:42:31Z",
+    "user": {
+      "login": "tahseenx-alt"
+    },
+    "pull_request": {
+      "html_url": "https://github.com/tahseenx-alt/RepoLens/pull/4",
+      "merged_at": "2026-10-10T07:42:31Z"
+    }
+  },
+  {
+    "id": 5789202125,
+    "number": 3,
+    "title": "Connect the repository search to the GitHub API",
+    "state": "closed",
+    "state_reason": null,
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/pull/3",
+    "comments": 0,
+    "created_at": "2026-10-10T07:32:17Z",
+    "updated_at": "2026-10-10T07:33:39Z",
+    "closed_at": "2026-10-10T07:33:39Z",
+    "user": {
+      "login": "tahseenx-alt"
+    },
+    "pull_request": {
+      "html_url": "https://github.com/tahseenx-alt/RepoLens/pull/3",
+      "merged_at": "2026-10-10T07:33:39Z"
+    }
+  },
+  {
+    "id": 5789151873,
+    "number": 2,
+    "title": "Build the RepoLens landing page",
+    "state": "closed",
+    "state_reason": null,
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/pull/2",
+    "comments": 0,
+    "created_at": "2026-10-10T07:24:06Z",
+    "updated_at": "2026-10-10T07:24:40Z",
+    "closed_at": "2026-10-10T07:24:40Z",
+    "user": {
+      "login": "tahseenx-alt"
+    },
+    "pull_request": {
+      "html_url": "https://github.com/tahseenx-alt/RepoLens/pull/2",
+      "merged_at": "2026-10-10T07:24:39Z"
+    }
+  },
+  {
+    "id": 5789075780,
+    "number": 1,
+    "title": "Set up React app with Vite (JavaScript)",
+    "state": "closed",
+    "state_reason": null,
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/pull/1",
+    "comments": 0,
+    "created_at": "2026-10-10T07:12:22Z",
+    "updated_at": "2026-10-10T07:21:00Z",
+    "closed_at": "2026-10-10T07:21:00Z",
+    "user": {
+      "login": "tahseenx-alt"
+    },
+    "pull_request": {
+      "html_url": "https://github.com/tahseenx-alt/RepoLens/pull/1",
+      "merged_at": "2026-10-10T07:21:00Z"
+    }
+  }
+]

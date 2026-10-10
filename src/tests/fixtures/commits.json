@@ -1,0 +1,202 @@
+[
+  {
+    "sha": "8c6732060e3430976da306ff7d8f1b124a004b4c",
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/commit/8c6732060e3430976da306ff7d8f1b124a004b4c",
+    "commit": {
+      "message": "Merge pull request #4 from tahseenx-alt/claude/landing-page-czvifi\n\nAdd repository analytics: languages, activity, contributors, commits",
+      "author": {
+        "name": "tahseenx-alt",
+        "date": "2026-10-10T07:42:31Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "date": "2026-10-10T07:42:31Z"
+      }
+    },
+    "author": {
+      "login": "tahseenx-alt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/210026946?v=4",
+      "html_url": "https://github.com/tahseenx-alt"
+    }
+  },
+  {
+    "sha": "bfb2ebe6afee709ab80dc09b30d64726f40bce37",
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/commit/bfb2ebe6afee709ab80dc09b30d64726f40bce37",
+    "commit": {
+      "message": "Add repository analytics: languages, activity, contributors, commits\n\nAfter a successful search, four dashboard cards appear under the\noverview card. Languages, commits and contributors each take one\nrequest; the commits request feeds both the weekly activity chart and\nthe recent commits list. Responses are cached so repeat searches make\nno new requests. Each card has its own loading and error state, and\nthe Recharts chart is lazy-loaded to keep the first page load small.\n\nCo-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01LH2fwdczPXPHq5eaPaUqyq",
+      "author": {
+        "name": "Claude",
+        "date": "2026-10-10T07:41:58Z"
+      },
+      "committer": {
+        "name": "Claude",
+        "date": "2026-10-10T07:41:58Z"
+      }
+    },
+    "author": {
+      "login": "claude",
+      "avatar_url": "https://avatars.githubusercontent.com/u/81847?v=4",
+      "html_url": "https://github.com/claude"
+    }
+  },
+  {
+    "sha": "3e7ec7ce1ce83cd78955a4504658ef941d9956b9",
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/commit/3e7ec7ce1ce83cd78955a4504658ef941d9956b9",
+    "commit": {
+      "message": "Merge pull request #3 from tahseenx-alt/claude/landing-page-czvifi\n\nConnect the repository search to the GitHub API",
+      "author": {
+        "name": "tahseenx-alt",
+        "date": "2026-10-10T07:33:38Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "date": "2026-10-10T07:33:38Z"
+      }
+    },
+    "author": {
+      "login": "tahseenx-alt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/210026946?v=4",
+      "html_url": "https://github.com/tahseenx-alt"
+    }
+  },
+  {
+    "sha": "dd49901abcb3decdb070b2580c831782fb71d8a0",
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/commit/dd49901abcb3decdb070b2580c831782fb71d8a0",
+    "commit": {
+      "message": "Connect the repository search to the GitHub REST API\n\nThe search form now accepts owner/repo or a GitHub URL, fetches the\nrepository with fetch(), and shows its name, description, stars, forks,\nopen issues, language and last updated date. Adds a loading state and\nclear messages for invalid input, missing repositories, network errors\nand GitHub rate limits.\n\nCo-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01LH2fwdczPXPHq5eaPaUqyq",
+      "author": {
+        "name": "Claude",
+        "date": "2026-10-10T07:32:06Z"
+      },
+      "committer": {
+        "name": "Claude",
+        "date": "2026-10-10T07:32:06Z"
+      }
+    },
+    "author": {
+      "login": "claude",
+      "avatar_url": "https://avatars.githubusercontent.com/u/81847?v=4",
+      "html_url": "https://github.com/claude"
+    }
+  },
+  {
+    "sha": "578515213e7c541e407d264b980e0b8a7bad0c50",
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/commit/578515213e7c541e407d264b980e0b8a7bad0c50",
+    "commit": {
+      "message": "Merge pull request #2 from tahseenx-alt/claude/landing-page-czvifi\n\nBuild the RepoLens landing page",
+      "author": {
+        "name": "tahseenx-alt",
+        "date": "2026-10-10T07:24:39Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "date": "2026-10-10T07:24:39Z"
+      }
+    },
+    "author": {
+      "login": "tahseenx-alt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/210026946?v=4",
+      "html_url": "https://github.com/tahseenx-alt"
+    }
+  },
+  {
+    "sha": "0b2e437f68cd248c9cf34225fba6ce2191659130",
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/commit/0b2e437f68cd248c9cf34225fba6ce2191659130",
+    "commit": {
+      "message": "Build the RepoLens landing page\n\nDark-themed landing page with a navbar, hero, repository search input,\nAnalyze button and four feature cards. Plain responsive CSS and inline SVG\nicons; the search is UI-only for now.\n\nCo-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01LH2fwdczPXPHq5eaPaUqyq",
+      "author": {
+        "name": "Claude",
+        "date": "2026-10-10T07:23:54Z"
+      },
+      "committer": {
+        "name": "Claude",
+        "date": "2026-10-10T07:23:54Z"
+      }
+    },
+    "author": {
+      "login": "claude",
+      "avatar_url": "https://avatars.githubusercontent.com/u/81847?v=4",
+      "html_url": "https://github.com/claude"
+    }
+  },
+  {
+    "sha": "e6e95e4e2cafdec7d3b262818ae73980e4f7f83a",
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/commit/e6e95e4e2cafdec7d3b262818ae73980e4f7f83a",
+    "commit": {
+      "message": "Merge pull request #1 from tahseenx-alt/claude/vite-react-setup-tov99n\n\nSet up React app with Vite (JavaScript)",
+      "author": {
+        "name": "tahseenx-alt",
+        "date": "2026-10-10T07:21:00Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "date": "2026-10-10T07:21:00Z"
+      }
+    },
+    "author": {
+      "login": "tahseenx-alt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/210026946?v=4",
+      "html_url": "https://github.com/tahseenx-alt"
+    }
+  },
+  {
+    "sha": "2109dce0f60c45ff92923f26ae45d6a1b6782c15",
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/commit/2109dce0f60c45ff92923f26ae45d6a1b6782c15",
+    "commit": {
+      "message": "Set up React app with Vite (JavaScript)\n\nScaffold the project from Vite's official \"react\" template\n(create-vite 9.2.1): React 19, Vite 8, oxlint. Plain JavaScript,\nno TypeScript. Package renamed to \"repolens\" and page title set\nto \"RepoLens\". The existing README is unchanged.\n\nCo-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01Jttu3AUmxiWrxKj7Hvo2NQ",
+      "author": {
+        "name": "Claude",
+        "date": "2026-10-10T07:12:11Z"
+      },
+      "committer": {
+        "name": "Claude",
+        "date": "2026-10-10T07:12:11Z"
+      }
+    },
+    "author": {
+      "login": "claude",
+      "avatar_url": "https://avatars.githubusercontent.com/u/81847?v=4",
+      "html_url": "https://github.com/claude"
+    }
+  },
+  {
+    "sha": "9fd2a4b008e537336e05e8a1c7dd411b5d09a274",
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/commit/9fd2a4b008e537336e05e8a1c7dd411b5d09a274",
+    "commit": {
+      "message": "Enhance README with project overview and features\n\nExpanded project details, including goals, planned features, tech stack, and future improvements.",
+      "author": {
+        "name": "tahseenx-alt",
+        "date": "2026-10-10T04:45:02Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "date": "2026-10-10T04:45:02Z"
+      }
+    },
+    "author": {
+      "login": "tahseenx-alt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/210026946?v=4",
+      "html_url": "https://github.com/tahseenx-alt"
+    }
+  },
+  {
+    "sha": "af25e497616c5ffae644395ec9bd31b24e204f63",
+    "html_url": "https://github.com/tahseenx-alt/RepoLens/commit/af25e497616c5ffae644395ec9bd31b24e204f63",
+    "commit": {
+      "message": "Initial commit",
+      "author": {
+        "name": "tahseenx-alt",
+        "date": "2026-10-10T04:43:34Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "date": "2026-10-10T04:43:34Z"
+      }
+    },
+    "author": {
+      "login": "tahseenx-alt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/210026946?v=4",
+      "html_url": "https://github.com/tahseenx-alt"
+    }
+  }
+]

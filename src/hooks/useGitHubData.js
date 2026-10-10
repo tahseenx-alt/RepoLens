@@ -1,31 +1,44 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-// Runs `load` when the component appears and tracks its progress.
-// Returns { status: 'loading' | 'success' | 'error', data, error }.
+const LOADING = { status: 'loading', data: null, error: null }
+
+// Runs `load` when the component appears (and again when `load` changes)
+// and tracks its progress. Returns:
+//   { status: 'loading' | 'success' | 'error', data, error, retry }
 // `load` receives an AbortSignal so the request is cancelled if the
-// component disappears (for example, when a new search starts).
+// component disappears (for example, when another repository is opened).
+// Wrap `load` in useCallback, otherwise it would run on every render.
 export function useGitHubData(load) {
-  const [state, setState] = useState({ status: 'loading', data: null, error: '' })
+  // Bumping this number runs the effect again (used by "Try again").
+  const [attempt, setAttempt] = useState(0)
+  // The result also remembers which `load` and attempt it belongs to.
+  const [result, setResult] = useState(null)
 
   useEffect(() => {
     const controller = new AbortController()
 
     load(controller.signal).then(
-      (data) => setState({ status: 'success', data, error: '' }),
+      (data) => {
+        if (!controller.signal.aborted) {
+          setResult({ load, attempt, status: 'success', data, error: null })
+        }
+      },
       (error) => {
-        if (error.name === 'AbortError') {
+        if (error?.name === 'AbortError' || controller.signal.aborted) {
           return
         }
-        setState({
-          status: 'error',
-          data: null,
-          error: error.message || 'Something went wrong. Please try again.',
-        })
+        setResult({ load, attempt, status: 'error', data: null, error })
       },
     )
 
     return () => controller.abort()
-  }, [load])
+  }, [load, attempt])
 
-  return state
+  const retry = useCallback(() => setAttempt((count) => count + 1), [])
+
+  // A result for an older `load` or attempt is out of date, so the
+  // new request is still loading.
+  const isCurrent = result && result.load === load && result.attempt === attempt
+  const { status, data, error } = isCurrent ? result : LOADING
+  return { status, data, error, retry }
 }
